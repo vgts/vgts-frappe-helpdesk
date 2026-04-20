@@ -11,7 +11,6 @@
   "subject_section",
   "subject",
   "raised_by",
-  "custom_requested_by_role",
   "status",
   "priority",
   "status_category",
@@ -469,12 +468,6 @@
    "set_only_once": 1
   },
   {
-   "fieldname": "custom_requested_by_role",
-   "fieldtype": "Data",
-   "in_list_view": 0,
-   "label": "Team / Role"
-  },
-  {
    "fieldname": "custom_target_environment",
    "fieldtype": "Select",
    "in_list_view": 1,
@@ -489,9 +482,10 @@
   },
   {
    "fieldname": "custom_project",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "in_list_view": 0,
-   "label": "Project"
+   "label": "Project",
+   "options": "Project"
   }
  ],
  "grid_page_length": 50,

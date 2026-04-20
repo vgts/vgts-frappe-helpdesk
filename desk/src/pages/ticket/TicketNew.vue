@@ -213,12 +213,6 @@ const vgtsFields = [
     display_via_depends_on: true,
   },
   {
-    fieldname: "custom_requested_by_role",
-    fieldtype: "Data",
-    label: __("Team / Role"),
-    display_via_depends_on: true,
-  },
-  {
     fieldname: "custom_target_environment",
     fieldtype: "Select",
     label: __("Target Environment"),
@@ -233,8 +227,9 @@ const vgtsFields = [
   },
   {
     fieldname: "custom_project",
-    fieldtype: "Data",
+    fieldtype: "Link",
     label: __("Project"),
+    options: "Project",
     display_via_depends_on: true,
   },
 ];
@@ -242,7 +237,6 @@ const vgtsFields = [
 const vgtsFieldValues = reactive<Record<string, any>>({
   ticket_type: "",
   priority: "",
-  custom_requested_by_role: "",
   custom_target_environment: "",
   custom_due_date: "",
   custom_project: "",
