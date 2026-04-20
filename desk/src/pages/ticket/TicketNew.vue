@@ -53,6 +53,16 @@
           </template>
         </UniInput>
       </div>
+
+      <!-- VGTS Request Fields -->
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <UniInput
+          v-for="field in vgtsFields"
+          :key="field.fieldname"
+          :field="field"
+          :value="vgtsFieldValues[field.fieldname]"
+          @change="(e) => handleVgtsFieldChange(e)"
+        /></div>
       <!-- existing fields -->
       <div
         class="flex flex-col"
@@ -183,6 +193,65 @@ const description = ref("");
 const attachments = ref([]);
 const templateFields = reactive({});
 
+// ── VGTS hardcoded request fields ─────────────────────────────────────────────
+const vgtsFields = [
+  {
+    fieldname: "ticket_type",
+    fieldtype: "Link",
+    label: __("Request Type"),
+    options: "HD Ticket Type",
+    filters: [["HD Ticket Type", "disabled", "=", 0]],
+    required: 1,
+    display_via_depends_on: true,
+  },
+  {
+    fieldname: "priority",
+    fieldtype: "Link",
+    label: __("Priority"),
+    options: "HD Ticket Priority",
+    required: 1,
+    display_via_depends_on: true,
+  },
+  {
+    fieldname: "custom_requested_by_role",
+    fieldtype: "Data",
+    label: __("Team / Role"),
+    display_via_depends_on: true,
+  },
+  {
+    fieldname: "custom_target_environment",
+    fieldtype: "Select",
+    label: __("Target Environment"),
+    options: "\nDev\nStaging\nProd",
+    display_via_depends_on: true,
+  },
+  {
+    fieldname: "custom_due_date",
+    fieldtype: "Date",
+    label: __("Due Date"),
+    display_via_depends_on: true,
+  },
+  {
+    fieldname: "custom_project",
+    fieldtype: "Data",
+    label: __("Project"),
+    display_via_depends_on: true,
+  },
+];
+
+const vgtsFieldValues = reactive<Record<string, any>>({
+  ticket_type: "",
+  priority: "",
+  custom_requested_by_role: "",
+  custom_target_environment: "",
+  custom_due_date: "",
+  custom_project: "",
+});
+
+function handleVgtsFieldChange(e: { fieldname: string; value: any }) {
+  vgtsFieldValues[e.fieldname] = e.value;
+}
+
 const template = createResource({
   url: "helpdesk.helpdesk.doctype.hd_ticket_template.api.get_one",
   makeParams: () => ({
@@ -257,12 +326,14 @@ const ticket = createResource({
       subject: subject.value,
       template: props.templateId,
       ...templateFields,
+      ...vgtsFieldValues,
     },
     attachments: attachments.value,
   }),
   validate: (params) => {
     const fields = visibleFields.value?.filter((f) => f.required) || [];
-    const toVerify = [...fields, "subject", "description"];
+    const vgtsRequired = vgtsFields.filter((f) => f.required);
+    const toVerify = [...fields, ...vgtsRequired, "subject", "description"];
     for (const field of toVerify) {
       if (!params.doc[field.fieldname || field]) {
         return `${field.label || field} is required`;
