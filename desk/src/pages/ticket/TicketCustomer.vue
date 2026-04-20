@@ -10,6 +10,18 @@
           :actions="ticket.data._customActions"
         />
         <Button
+          v-if="isOwner"
+          :label="__('Delete')"
+          theme="red"
+          variant="subtle"
+          :loading="deleteTicket.loading"
+          @click="handleDelete()"
+        >
+          <template #prefix>
+            <LucideTrash2 class="size-4" />
+          </template>
+        </Button>
+        <Button
           v-if="ticket.data.status !== 'Closed'"
           :label="__('Close')"
           theme="gray"
@@ -87,6 +99,7 @@ import { setupCustomizations } from "@/composables/formCustomisation";
 import { useActiveViewers } from "@/composables/realtime";
 import { useScreenSize } from "@/composables/screen";
 
+import { useAuthStore } from "@/stores/auth";
 import { useConfigStore } from "@/stores/config";
 import { globalStore } from "@/stores/globalStore";
 import { useTicketStatusStore } from "@/stores/ticketStatus";
@@ -124,6 +137,7 @@ const router = useRouter();
 const props = defineProps<P>();
 
 const { getStatus } = useTicketStatusStore();
+const { userId } = useAuthStore();
 
 const ticket = createResource({
   url: "helpdesk.helpdesk.doctype.hd_ticket.api.get_one",
@@ -276,6 +290,46 @@ function updateTicket(fieldname: string, value: string) {
       ticket.reload();
       toast.success(__("Ticket updated successfully."));
     },
+  });
+}
+
+// Show delete button only to the ticket owner / person who raised it
+const isOwner = computed(() =>
+  ticket.data
+    ? ticket.data.owner === userId || ticket.data.raised_by === userId
+    : false
+);
+
+const deleteTicket = createResource({
+  url: "frappe.client.delete",
+  makeParams: () => ({
+    doctype: "HD Ticket",
+    name: props.ticketId,
+  }),
+  onSuccess: () => {
+    toast.success(__("Ticket deleted successfully."));
+    router.replace({ name: "TicketsCustomer" });
+  },
+  onError: () => {
+    toast.error(__("Failed to delete ticket. You may not have permission."));
+  },
+});
+
+function handleDelete() {
+  $dialog({
+    title: __("Delete Ticket"),
+    message: __("Are you sure you want to delete this ticket? This action cannot be undone."),
+    actions: [
+      {
+        label: __("Delete"),
+        variant: "solid",
+        theme: "red",
+        onClick(close: Function) {
+          close();
+          deleteTicket.submit();
+        },
+      },
+    ],
   });
 }
 
