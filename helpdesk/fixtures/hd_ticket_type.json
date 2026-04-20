@@ -1,0 +1,72 @@
+[
+ {
+  "doctype": "HD Ticket Type",
+  "name": "Access & Permissions",
+  "description": "Repo access, AWS IAM, VPN, DB credentials",
+  "disabled": 0,
+  "is_system": 0
+ },
+ {
+  "doctype": "HD Ticket Type",
+  "name": "Infrastructure",
+  "description": "Provision server, resize instance, new environment setup",
+  "disabled": 0,
+  "is_system": 0
+ },
+ {
+  "doctype": "HD Ticket Type",
+  "name": "CI/CD Pipeline",
+  "description": "Fix broken build, new pipeline, deployment config",
+  "disabled": 0,
+  "is_system": 0
+ },
+ {
+  "doctype": "HD Ticket Type",
+  "name": "Database",
+  "description": "Schema change, query tuning, backup/restore",
+  "disabled": 0,
+  "is_system": 0
+ },
+ {
+  "doctype": "HD Ticket Type",
+  "name": "Incident / Outage",
+  "description": "Service down, performance degradation",
+  "disabled": 0,
+  "is_system": 0
+ },
+ {
+  "doctype": "HD Ticket Type",
+  "name": "Security",
+  "description": "SSL cert renewal, vulnerability patch, secret rotation",
+  "disabled": 0,
+  "is_system": 0
+ },
+ {
+  "doctype": "HD Ticket Type",
+  "name": "Monitoring & Alerts",
+  "description": "Add dashboards, configure alerts, log setup",
+  "disabled": 0,
+  "is_system": 0
+ },
+ {
+  "doctype": "HD Ticket Type",
+  "name": "Release Management",
+  "description": "Hotfix deploy, rollback, release scheduling",
+  "disabled": 0,
+  "is_system": 0
+ },
+ {
+  "doctype": "HD Ticket Type",
+  "name": "Architecture Review",
+  "description": "Tech spike, design review, infra planning",
+  "disabled": 0,
+  "is_system": 0
+ },
+ {
+  "doctype": "HD Ticket Type",
+  "name": "Tooling / Integrations",
+  "description": "New tool onboarding, API integration, license request",
+  "disabled": 0,
+  "is_system": 0
+ }
+]

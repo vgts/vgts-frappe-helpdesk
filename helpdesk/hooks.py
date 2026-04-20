@@ -9,6 +9,11 @@ app_license = "AGPLv3"
 required_apps = ["telephony"]
 require_type_annotated_api_methods = True
 
+# ── Fixtures ────────────────────────────────────────────────────────────────────
+fixtures = [
+    {"dt": "HD Ticket Type"},
+]
+
 add_to_apps_screen = [
     {
         "name": "helpdesk",

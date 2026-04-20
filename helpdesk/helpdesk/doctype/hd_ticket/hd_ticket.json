@@ -11,11 +11,15 @@
   "subject_section",
   "subject",
   "raised_by",
+  "custom_requested_by_role",
   "status",
   "priority",
   "status_category",
   "cb00",
   "ticket_type",
+  "custom_target_environment",
+  "custom_due_date",
+  "custom_project",
   "agent_group",
   "summary",
   "sb_details",
@@ -463,13 +467,38 @@
    "label": "Ticket raised outside working hours",
    "read_only": 1,
    "set_only_once": 1
+  },
+  {
+   "fieldname": "custom_requested_by_role",
+   "fieldtype": "Data",
+   "in_list_view": 0,
+   "label": "Team / Role"
+  },
+  {
+   "fieldname": "custom_target_environment",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Target Environment",
+   "options": "\nDev\nStaging\nProd"
+  },
+  {
+   "fieldname": "custom_due_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Due Date"
+  },
+  {
+   "fieldname": "custom_project",
+   "fieldtype": "Data",
+   "in_list_view": 0,
+   "label": "Project"
   }
  ],
  "grid_page_length": 50,
  "icon": "fa fa-issue",
  "idx": 61,
  "links": [],
- "modified": "2026-02-27 16:42:43.292656",
+ "modified": "2026-04-20 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Helpdesk",
  "name": "HD Ticket",
