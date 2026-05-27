@@ -34,7 +34,7 @@
         </div>
 
         <!-- Due Date -->
-        <div class="mb-3">
+        <div class="mb-3 border border-outline-gray-2 rounded-md p-2">
           <TicketField
             v-if="dueDateField"
             :field="dueDateField"
