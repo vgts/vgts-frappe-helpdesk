@@ -33,12 +33,20 @@
           </template>
         </div>
 
-        <!-- Due Date -->
-        <div class="mb-3 border border-outline-gray-2 rounded-md p-2">
+        <!-- Due Date & Expected Completion Date -->
+        <div class="mb-3 border border-outline-gray-2 rounded-md p-2 space-y-2">
           <TicketField
             v-if="dueDateField"
             :field="dueDateField"
             :value="dueDateField.value"
+            @change="
+              ({ fieldname, value }) => handleFieldUpdate(fieldname, value)
+            "
+          />
+          <TicketField
+            v-if="expectedCompletionField"
+            :field="expectedCompletionField"
+            :value="expectedCompletionField.value"
             @change="
               ({ fieldname, value }) => handleFieldUpdate(fieldname, value)
             "
@@ -143,6 +151,25 @@ const dueDateField = computed(() => {
   };
 });
 
+const expectedCompletionField = computed(() => {
+  const fieldMeta = getField("custom_expected_completion_date");
+  if (!fieldMeta) return null;
+  return {
+    label: fieldMeta.label || "Expected Completion Date",
+    value: ticket.value.doc.custom_expected_completion_date,
+    fieldtype: "Date",
+    fieldname: "custom_expected_completion_date",
+    placeholder: "Select expected completion date",
+    readonly: false,
+    disabled: false,
+    required: false,
+    visible: true,
+    options: "",
+    doctype: "",
+    url_method: "",
+  };
+});
+
 const customFields = computed(() => {
   const fieldsMeta = getFields();
   if (!fieldsMeta || fieldsMeta.length === 0) {
@@ -159,6 +186,7 @@ const customFields = computed(() => {
     "subject",
     "status",
     "custom_due_date",
+    "custom_expected_completion_date",
   ];
   customFields = customFields.filter((f) => !_coreFields.includes(f.fieldname));
   let _customFields = customFields

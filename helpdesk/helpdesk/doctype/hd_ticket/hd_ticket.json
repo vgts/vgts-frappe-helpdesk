@@ -481,6 +481,12 @@
    "label": "Due Date"
   },
   {
+   "fieldname": "custom_expected_completion_date",
+   "fieldtype": "Date",
+   "in_list_view": 0,
+   "label": "Expected Completion Date"
+  },
+  {
    "fieldname": "custom_project",
    "fieldtype": "Link",
    "in_list_view": 0,
