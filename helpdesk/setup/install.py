@@ -348,6 +348,27 @@ def add_default_status():
             "category": "Resolved",
             "order": 4,
         },
+        {
+            "label_agent": "In Progress",
+            "color": "Blue",
+            "enabled": 1,
+            "category": "Open",
+            "order": 5,
+        },
+        {
+            "label_agent": "Need Clarity - PM",
+            "color": "Orange",
+            "enabled": 1,
+            "category": "Paused",
+            "order": 6,
+        },
+        {
+            "label_agent": "Need Clarity - Client",
+            "color": "Amber",
+            "enabled": 1,
+            "category": "Paused",
+            "order": 7,
+        },
     ]
     for status in statuses:
         if not frappe.db.exists("HD Ticket Status", status["label_agent"]):

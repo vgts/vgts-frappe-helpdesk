@@ -9,71 +9,66 @@ def is_email_content_empty(content: str | None) -> bool:
 def get_default_email_content(type: str) -> str:
     if type == "share_feedback":
         return """\
-<p>Hello,</p>
-<p>Thanks for reaching out to us. We’d love your feedback on your recent support experience with ticket #{{ doc.name }}.</p>
-<a href="{{ url }}" class="btn btn-primary">Share Feedback</a>
-
-<p>Thank you!<br>Support Team</p>"""
+<div style="font-family: -apple-system, BlinkMacSystemFont, ‘Segoe UI’, Roboto, sans-serif; max-width: 600px; margin: 0 auto; color: #1f2937;">
+  <p style="margin: 0 0 16px;">Hello,</p>
+  <p style="margin: 0 0 20px;">Thanks for reaching out to us. We’d love your feedback on your recent support experience with ticket <strong>#{{ doc.name }}</strong>.</p>
+  <p style="margin: 0 0 24px;">
+    <a href="{{ url }}" style="display: inline-block; padding: 10px 20px; background-color: #171717; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 500;">Share Feedback</a>
+  </p>
+  <p style="margin: 0;">Thank you!<br />Support Team</p>
+</div>"""
 
     if type == "acknowledgement":
         return """\
-<p>Hi,</p>
-<br />
-<p>Thank you for reaching out to us. We've received your request and created a support ticket.</p>
-<p>
-    <strong>Ticket ID:</strong> {{ doc.name }}<br />
-    <strong>Subject:</strong> {{ doc.subject }}<br />
-</p>
-<p>Our team is reviewing it and will get back to you shortly.</p>
-<br />
-<p>Best,<br />Support Team</p>
+<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; color: #1f2937;">
+  <p style="margin: 0 0 16px;">Hi,</p>
+  <p style="margin: 0 0 16px;">Thank you for reaching out to us. We've received your request and created a support ticket.</p>
+  <table style="margin: 0 0 16px; border-collapse: collapse;">
+    <tr><td style="padding: 4px 8px 4px 0; font-weight: 600;">Ticket ID:</td><td style="padding: 4px 0;">{{ doc.name }}</td></tr>
+    <tr><td style="padding: 4px 8px 4px 0; font-weight: 600;">Subject:</td><td style="padding: 4px 0;">{{ doc.subject }}</td></tr>
+  </table>
+  <p style="margin: 0 0 16px;">Our team is reviewing it and will get back to you shortly.</p>
+  {% if ticket_url %}
+  <p style="margin: 0 0 24px;">
+    <a href="{{ ticket_url }}" style="display: inline-block; padding: 10px 20px; background-color: #171717; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 500;">View Ticket</a>
+  </p>
+  {% endif %}
+  <p style="margin: 0;">Best,<br />Support Team</p>
+</div>
 """
 
     if type == "reply_to_agents":
         return """\
-<div>
-  <p>Hello,</p>
-  <p>You have a new reply on the ticket <strong>#{{ doc.name }}</strong>.</p>
-  <p><strong>Subject:</strong> {{ doc.subject }}</p>
-  <p><strong>Raised By:</strong> {{ doc.raised_by }}</p>
-  <p><strong>Priority:</strong> {{ doc.priority }}</p>
-
-  <br />
-  <p>
-    You can view and respond to this ticket by
-    <a href="{{ ticket_url }}">clicking here</a>.
+<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; color: #1f2937;">
+  <p style="margin: 0 0 16px;">Hello,</p>
+  <p style="margin: 0 0 16px;">You have a new reply on ticket <strong>#{{ doc.name }}</strong>.</p>
+  <table style="margin: 0 0 16px; border-collapse: collapse;">
+    <tr><td style="padding: 4px 8px 4px 0; font-weight: 600;">Subject:</td><td style="padding: 4px 0;">{{ doc.subject }}</td></tr>
+    <tr><td style="padding: 4px 8px 4px 0; font-weight: 600;">Raised By:</td><td style="padding: 4px 0;">{{ doc.raised_by }}</td></tr>
+    <tr><td style="padding: 4px 8px 4px 0; font-weight: 600;">Priority:</td><td style="padding: 4px 0;">{{ doc.priority }}</td></tr>
+  </table>
+  <p style="margin: 0 0 24px;">
+    <a href="{{ ticket_url }}" style="display: inline-block; padding: 10px 20px; background-color: #171717; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 500;">View Ticket</a>
   </p>
-  <p>Regards,<br />Support Team</p>
+  <p style="margin: 0;">Regards,<br />Support Team</p>
 </div>
 """
 
     if type == "reply_via_agent":
         return """\
-<div>
-  <h2><strong>Ticket #{{ doc.name }}</strong></h2>
-  <h3>You have a new reply on this ticket</h3>
-  <br />
-  <div style="margin-bottom: 10px">
-    <h3 style="margin-bottom: 20px">Message</h3>
-    <div
-      style="
-        background: #f3f5f8;
-        padding: 10px;
-        border-radius: 4px;
-        border: 1px solid #e5e9ee;
-      "
-    >
+<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; color: #1f2937;">
+  <h2 style="margin: 0 0 8px; font-size: 18px;"><strong>Ticket #{{ doc.name }}</strong></h2>
+  <p style="margin: 0 0 16px; color: #6b7280;">You have a new reply on this ticket</p>
+  <div style="margin: 0 0 20px;">
+    <p style="margin: 0 0 8px; font-weight: 600;">Message</p>
+    <div style="background: #f9fafb; padding: 16px; border-radius: 8px; border: 1px solid #e5e7eb; line-height: 1.6;">
       {{ message }}
     </div>
   </div>
-  <p>Please visit the customer portal to reply to this message</p>
-  <a
-    class="btn btn-primary"
-    href="{{ ticket_url }}"
-    rel="noopener noreferrer"
-    target="_blank"
-  >View in Portal</a>
-  <br />
+  <p style="margin: 0 0 16px;">Please visit the customer portal to reply to this message.</p>
+  <p style="margin: 0 0 24px;">
+    <a href="{{ ticket_url }}" style="display: inline-block; padding: 10px 20px; background-color: #171717; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 500;" rel="noopener noreferrer" target="_blank">View Ticket</a>
+  </p>
 </div>
 """
 

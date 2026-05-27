@@ -164,6 +164,7 @@ class HDTicket(Document):
                 reference_doctype="HD Ticket",
                 reference_name=self.name,
                 now=True,
+                with_container=False,
                 in_reply_to=last_communication.name if last_communication else None,
                 email_headers={"X-Auto-Generated": "hd-email-feedback"},
             )
@@ -765,6 +766,7 @@ class HDTicket(Document):
             "HD Settings", "reply_email_to_agent_content"
         )
         default_email_content = get_default_email_content("reply_to_agents")
+        last_communication = self.get_last_communication()
         try:
             frappe.sendmail(
                 recipients=recipients,
@@ -781,6 +783,10 @@ class HDTicket(Document):
                 reference_doctype="HD Ticket",
                 reference_name=self.name,
                 now=True,
+                with_container=False,
+                in_reply_to=(
+                    last_communication.name if last_communication else None
+                ),
             )
         except Exception as e:
             frappe.throw(_(e))
@@ -800,11 +806,13 @@ class HDTicket(Document):
                 message=self._get_rendered_template(
                     acknowledgement_email_content,
                     default_acknowledgement_email_content,
+                    {"ticket_url": self.portal_uri},
                 ),
                 reference_doctype="HD Ticket",
                 reference_name=self.name,
                 now=True,
                 expose_recipients="header",
+                with_container=False,
                 email_headers={"X-Auto-Generated": "hd-acknowledgement"},
             )
         except Exception as e:

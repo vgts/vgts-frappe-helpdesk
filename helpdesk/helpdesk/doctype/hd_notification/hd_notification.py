@@ -63,4 +63,5 @@ class HDNotification(Document):
                 message=self.format_message(),
                 template="notification",
                 args=self.get_args(),
+                with_container=False,
             )

@@ -33,6 +33,18 @@
           </template>
         </div>
 
+        <!-- Due Date -->
+        <div class="mb-3">
+          <TicketField
+            v-if="dueDateField"
+            :field="dueDateField"
+            :value="dueDateField.value"
+            @change="
+              ({ fieldname, value }) => handleFieldUpdate(fieldname, value)
+            "
+          />
+        </div>
+
         <!-- Assignee component -->
         <AssignTo />
       </div>
@@ -112,6 +124,25 @@ const coreFields = computed(() => {
   return _coreFields;
 });
 
+const dueDateField = computed(() => {
+  const fieldMeta = getField("custom_due_date");
+  if (!fieldMeta) return null;
+  return {
+    label: fieldMeta.label || "Due Date",
+    value: ticket.value.doc.custom_due_date,
+    fieldtype: "Date",
+    fieldname: "custom_due_date",
+    placeholder: "Select due date",
+    readonly: false,
+    disabled: false,
+    required: false,
+    visible: true,
+    options: "",
+    doctype: "",
+    url_method: "",
+  };
+});
+
 const customFields = computed(() => {
   const fieldsMeta = getFields();
   if (!fieldsMeta || fieldsMeta.length === 0) {
@@ -127,6 +158,7 @@ const customFields = computed(() => {
     "agent_group",
     "subject",
     "status",
+    "custom_due_date",
   ];
   customFields = customFields.filter((f) => !_coreFields.includes(f.fieldname));
   let _customFields = customFields
