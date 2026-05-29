@@ -5,6 +5,7 @@
     <tr><td style="padding: 4px 8px 4px 0; font-weight: 600;">Subject:</td><td style="padding: 4px 0;">{{ ticket_subject }}</td></tr>
     <tr><td style="padding: 4px 8px 4px 0; font-weight: 600;">Raised By:</td><td style="padding: 4px 0;">{{ raised_by }}</td></tr>
     <tr><td style="padding: 4px 8px 4px 0; font-weight: 600;">Priority:</td><td style="padding: 4px 0;">{{ priority }}</td></tr>
+    {% if project %}<tr><td style="padding: 4px 8px 4px 0; font-weight: 600;">Project:</td><td style="padding: 4px 0;">{{ project }}</td></tr>{% endif %}
   </table>
   <p style="margin: 0 0 24px;">
     <a href="{{ ticket_url }}" style="display: inline-block; padding: 10px 20px; background-color: #171717; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 500;">View Ticket</a>

@@ -11,7 +11,7 @@ def get_default_email_content(type: str) -> str:
         return """\
 <div style="font-family: -apple-system, BlinkMacSystemFont, ‘Segoe UI’, Roboto, sans-serif; max-width: 600px; margin: 0 auto; color: #1f2937;">
   <p style="margin: 0 0 16px;">Hello,</p>
-  <p style="margin: 0 0 20px;">Thanks for reaching out to us. We’d love your feedback on your recent support experience with ticket <strong>#{{ doc.name }}</strong>.</p>
+  <p style="margin: 0 0 20px;">Thanks for reaching out to us. We’d love your feedback on your recent support experience with ticket <strong>#{{ doc.name }}</strong>.{% if doc.custom_project %} (Project: {{ doc.custom_project }}){% endif %}</p>
   <p style="margin: 0 0 24px;">
     <a href="{{ url }}" style="display: inline-block; padding: 10px 20px; background-color: #171717; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 500;">Share Feedback</a>
   </p>
@@ -26,6 +26,7 @@ def get_default_email_content(type: str) -> str:
   <table style="margin: 0 0 16px; border-collapse: collapse;">
     <tr><td style="padding: 4px 8px 4px 0; font-weight: 600;">Ticket ID:</td><td style="padding: 4px 0;">{{ doc.name }}</td></tr>
     <tr><td style="padding: 4px 8px 4px 0; font-weight: 600;">Subject:</td><td style="padding: 4px 0;">{{ doc.subject }}</td></tr>
+    {% if doc.custom_project %}<tr><td style="padding: 4px 8px 4px 0; font-weight: 600;">Project:</td><td style="padding: 4px 0;">{{ doc.custom_project }}</td></tr>{% endif %}
   </table>
   <p style="margin: 0 0 16px;">Our team is reviewing it and will get back to you shortly.</p>
   {% if ticket_url %}
@@ -46,6 +47,7 @@ def get_default_email_content(type: str) -> str:
     <tr><td style="padding: 4px 8px 4px 0; font-weight: 600;">Subject:</td><td style="padding: 4px 0;">{{ doc.subject }}</td></tr>
     <tr><td style="padding: 4px 8px 4px 0; font-weight: 600;">Raised By:</td><td style="padding: 4px 0;">{{ doc.raised_by }}</td></tr>
     <tr><td style="padding: 4px 8px 4px 0; font-weight: 600;">Priority:</td><td style="padding: 4px 0;">{{ doc.priority }}</td></tr>
+    {% if doc.custom_project %}<tr><td style="padding: 4px 8px 4px 0; font-weight: 600;">Project:</td><td style="padding: 4px 0;">{{ doc.custom_project }}</td></tr>{% endif %}
   </table>
   <p style="margin: 0 0 24px;">
     <a href="{{ ticket_url }}" style="display: inline-block; padding: 10px 20px; background-color: #171717; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 500;">View Ticket</a>
@@ -58,6 +60,7 @@ def get_default_email_content(type: str) -> str:
         return """\
 <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; color: #1f2937;">
   <h2 style="margin: 0 0 8px; font-size: 18px;"><strong>Ticket #{{ doc.name }}</strong></h2>
+  {% if doc.custom_project %}<p style="margin: 0 0 8px; color: #6b7280;">Project: {{ doc.custom_project }}</p>{% endif %}
   <p style="margin: 0 0 16px; color: #6b7280;">You have a new reply on this ticket</p>
   <div style="margin: 0 0 20px;">
     <p style="margin: 0 0 8px; font-weight: 600;">Message</p>

@@ -1,6 +1,11 @@
 import frappe
 from frappe.model.document import Document
 
+from helpdesk.helpdesk.utils.email import (
+    default_outgoing_email_account,
+    default_ticket_outgoing_email_account,
+)
+
 
 class HDNotification(Document):
     def format_message(self):
@@ -57,6 +62,9 @@ class HDNotification(Document):
             if skip_email_workflow:
                 return
 
+            email_account = default_ticket_outgoing_email_account() or default_outgoing_email_account()
+            sender = email_account.email_id if email_account else None
+
             frappe.sendmail(
                 recipients=self.user_to,
                 subject="New notification",
@@ -64,4 +72,5 @@ class HDNotification(Document):
                 template="notification",
                 args=self.get_args(),
                 with_container=False,
+                sender=sender,
             )

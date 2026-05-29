@@ -1,5 +1,6 @@
 <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; color: #1f2937;">
   <h2 style="margin: 0 0 8px; font-size: 18px;"><strong>Ticket #{{ ticket_id }}</strong></h2>
+  {% if project %}<p style="margin: 0 0 8px; color: #6b7280;">Project: {{ project }}</p>{% endif %}
   <p style="margin: 0 0 16px; color: #6b7280;">You have a new reply on this ticket</p>
   <div style="margin: 0 0 20px;">
     <p style="margin: 0 0 8px; font-weight: 600;">Message</p>

@@ -152,6 +152,8 @@ class HDTicket(Document):
             "HD Settings", "feedback_email_content"
         )
         default_feedback_email_content = get_default_email_content("share_feedback")
+        sender_email = self.sender_email()
+        sender = sender_email.email_id if sender_email else None
         try:
             frappe.sendmail(
                 recipients=[self.raised_by],
@@ -165,6 +167,7 @@ class HDTicket(Document):
                 reference_name=self.name,
                 now=True,
                 with_container=False,
+                sender=sender,
                 in_reply_to=last_communication.name if last_communication else None,
                 email_headers={"X-Auto-Generated": "hd-email-feedback"},
             )
@@ -767,6 +770,8 @@ class HDTicket(Document):
         )
         default_email_content = get_default_email_content("reply_to_agents")
         last_communication = self.get_last_communication()
+        sender_email = self.sender_email()
+        sender = sender_email.email_id if sender_email else None
         try:
             frappe.sendmail(
                 recipients=recipients,
@@ -784,6 +789,7 @@ class HDTicket(Document):
                 reference_name=self.name,
                 now=True,
                 with_container=False,
+                sender=sender,
                 in_reply_to=(
                     last_communication.name if last_communication else None
                 ),
@@ -799,6 +805,9 @@ class HDTicket(Document):
             "acknowledgement"
         )
 
+        sender_email = self.sender_email()
+        sender = sender_email.email_id if sender_email else None
+
         try:
             frappe.sendmail(
                 recipients=[self.raised_by],
@@ -813,6 +822,7 @@ class HDTicket(Document):
                 now=True,
                 expose_recipients="header",
                 with_container=False,
+                sender=sender,
                 email_headers={"X-Auto-Generated": "hd-acknowledgement"},
             )
         except Exception as e:
