@@ -780,3 +780,30 @@ def get_ticket_activities(ticket: str):
 def get_ticket_assignees(ticket: str):
     assignees = frappe.db.get_value("HD Ticket", ticket, "_assign") or "[]"
     return assignees
+
+
+@frappe.whitelist()
+def get_complaint_categories(team: str = None):
+    """Get parent complaint categories, optionally filtered by service team."""
+    filters = {"parent_ticket_type": ("is", "not set")}
+    if team:
+        filters["service_team"] = team
+    return frappe.get_all(
+        "HD Ticket Type",
+        filters=filters,
+        fields=["name", "priority", "service_team"],
+        order_by="name asc",
+    )
+
+
+@frappe.whitelist()
+def get_sub_complaints(complaint_category: str = None):
+    """Get sub-complaints for a given complaint category."""
+    if not complaint_category:
+        return []
+    return frappe.get_all(
+        "HD Ticket Type",
+        filters={"parent_ticket_type": complaint_category},
+        fields=["name", "priority", "service_team"],
+        order_by="name asc",
+    )

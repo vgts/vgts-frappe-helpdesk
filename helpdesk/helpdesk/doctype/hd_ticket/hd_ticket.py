@@ -258,11 +258,16 @@ class HDTicket(Document):
                 self.customer = customer[0]
 
     def set_priority(self):
+        # Auto-set priority from sub-complaint (ticket_type) if available
+        if self.ticket_type:
+            type_priority = frappe.get_cached_value("HD Ticket Type", self.ticket_type, "priority")
+            if type_priority:
+                self.priority = type_priority
+                return
         if self.priority:
             return
         self.priority = (
-            frappe.get_cached_value("HD Ticket Type", self.ticket_type, "priority")
-            or frappe.get_cached_value("HD Settings", "HD Settings", "default_priority")
+            frappe.get_cached_value("HD Settings", "HD Settings", "default_priority")
             or DEFAULT_TICKET_PRIORITY
         )
 

@@ -10,10 +10,25 @@
  "engine": "InnoDB",
  "field_order": [
   "is_system",
+  "service_team",
+  "parent_ticket_type",
   "description",
   "priority"
  ],
  "fields": [
+  {
+   "fieldname": "service_team",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Service Team",
+   "options": "HD Team"
+  },
+  {
+   "fieldname": "parent_ticket_type",
+   "fieldtype": "Link",
+   "label": "Parent Complaint",
+   "options": "HD Ticket Type"
+  },
   {
    "fieldname": "description",
    "fieldtype": "Small Text",

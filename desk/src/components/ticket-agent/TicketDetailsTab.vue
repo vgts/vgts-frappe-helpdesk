@@ -28,8 +28,9 @@
               :doctype="field.doctype"
               :modelValue="field.value"
               :required="field.required"
+              :filters="getLinkFilters(field.fieldname)"
               @update:model-value="
-              (val:string) => handleFieldUpdate(field.fieldname, val,true)
+              (val:string) => handleCascadingUpdate(field.fieldname, val)
             "
             />
           </template>
@@ -73,7 +74,7 @@ import {
   FieldValue,
   TicketSymbol,
 } from "@/types";
-import { computed, inject, ref } from "vue";
+import { computed, inject, ref, reactive } from "vue";
 import TicketField from "../TicketField.vue";
 import AssignTo from "./AssignTo.vue";
 import TicketContact from "./TicketContact.vue";
@@ -85,6 +86,13 @@ const activities = inject(ActivitiesSymbol);
 const { getFields, getField } = getMeta("HD Ticket");
 const { notifyTicketUpdate } = useNotifyTicketUpdate(ticket.value?.name);
 
+// Reactive local state for cascading filter tracking
+const filterState = reactive({
+  agent_group: ticket.value?.doc?.agent_group || "",
+  complaint_category: ticket.value?.doc?.complaint_category || "",
+  ticket_type: ticket.value?.doc?.ticket_type || "",
+});
+
 // ticket_type, priority, customer, agent_group
 const coreFields = computed(() => {
   // TODO: to confirm whether customizations should apply to core fields as well
@@ -93,9 +101,10 @@ const coreFields = computed(() => {
     return [];
   }
   const _coreFields = [
+    { group: true, fields: [getField("agent_group")] },
+    { group: true, fields: [getField("complaint_category")] },
     { group: true, fields: [getField("ticket_type"), getField("priority")] },
     { group: false, fields: [getField("customer")] },
-    { group: true, fields: [getField("agent_group")] },
   ];
 
   _coreFields.forEach((section) => {
@@ -127,6 +136,7 @@ const customFields = computed(() => {
     "priority",
     "customer",
     "agent_group",
+    "complaint_category",
     "subject",
     "status",
   ];
@@ -162,12 +172,51 @@ function getFieldInFormat(fieldTemplate, fieldMeta) {
   };
 }
 
+function getLinkFilters(fieldname: string) {
+  if (fieldname === "complaint_category") {
+    const filters: Record<string, any> = { parent_ticket_type: ["is", "not set"] };
+    if (filterState.agent_group) {
+      filters["service_team"] = filterState.agent_group;
+    }
+    return filters;
+  }
+  if (fieldname === "ticket_type") {
+    if (filterState.complaint_category) {
+      return { parent_ticket_type: filterState.complaint_category };
+    }
+    return { parent_ticket_type: ["is", "not set"] };
+  }
+  return null;
+}
+
+function handleCascadingUpdate(fieldname: string, value: string) {
+  // Cascade: team → complaint_category → ticket_type → priority
+  if (fieldname === "agent_group") {
+    filterState.agent_group = value;
+    filterState.complaint_category = "";
+    filterState.ticket_type = "";
+    handleFieldUpdate("complaint_category", "", false);
+    handleFieldUpdate("ticket_type", "", false);
+  } else if (fieldname === "complaint_category") {
+    filterState.complaint_category = value;
+    filterState.ticket_type = "";
+    handleFieldUpdate("ticket_type", "", false);
+  } else if (fieldname === "ticket_type") {
+    filterState.ticket_type = value;
+  }
+  handleFieldUpdate(fieldname, value, true);
+}
+
 function handleFieldUpdate(
   fieldname: string,
   value: FieldValue,
   isCoreFieldUpdated = false
 ) {
   if (ticket.value.doc[fieldname] == value) return;
+
+  // Update local doc immediately so filters react before server response
+  ticket.value.doc[fieldname] = value;
+
   if (isCoreFieldUpdated) {
     const label = getField(fieldname)?.label || fieldname;
     notifyTicketUpdate(label, value as string);

@@ -15,6 +15,7 @@
   "priority",
   "status_category",
   "cb00",
+  "complaint_category",
   "ticket_type",
   "agent_group",
   "summary",
@@ -117,9 +118,15 @@
    "fieldtype": "Column Break"
   },
   {
+   "fieldname": "complaint_category",
+   "fieldtype": "Link",
+   "label": "Complaint Category",
+   "options": "HD Ticket Type"
+  },
+  {
    "fieldname": "ticket_type",
    "fieldtype": "Link",
-   "label": "Ticket Type",
+   "label": "Sub Complaint",
    "options": "HD Ticket Type"
   },
   {

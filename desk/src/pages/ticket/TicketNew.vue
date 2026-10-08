@@ -202,16 +202,59 @@ function applyFilters(fieldname: string, filters: any = null) {
 
 const customOnChange = computed(() => template.data?._customOnChange);
 
+function getCascadingFilters(fieldname: string) {
+  if (fieldname === "complaint_category") {
+    const filters: Record<string, any> = {};
+    if (templateFields["agent_group"]) {
+      filters["service_team"] = templateFields["agent_group"];
+    }
+    return filters;
+  }
+  return null;
+}
+
 const visibleFields = computed(() => {
   let _fields = template.data?.fields?.filter(
     (f) => !isCustomerPortal.value || !f.hide_from_customer
   );
   if (!_fields) return [];
-  return _fields.map((field) => parseField(field, templateFields));
+  return _fields.map((field) => {
+    const parsed = parseField(field, templateFields);
+    const cascadingFilters = getCascadingFilters(field.fieldname);
+    if (cascadingFilters) {
+      parsed.filters = cascadingFilters;
+    }
+    return parsed;
+  });
 });
+
+function handleCascadingReset(fieldname: string, value: string) {
+  if (fieldname === "agent_group") {
+    templateFields["complaint_category"] = "";
+    templateFields["priority"] = "";
+  } else if (fieldname === "complaint_category") {
+    if (value) {
+      call("frappe.client.get_value", {
+        doctype: "HD Ticket Type",
+        filters: value,
+        fieldname: "priority",
+      }).then((r) => {
+        if (r?.priority) {
+          templateFields["priority"] = r.priority;
+        }
+      });
+    } else {
+      templateFields["priority"] = "";
+    }
+  }
+}
 
 function handleOnFieldChange(e: any, fieldname: string, fieldtype: string) {
   templateFields[fieldname] = e.value;
+
+  // Handle cascading resets and auto-priority
+  handleCascadingReset(fieldname, e.value);
+
   const fieldDependentFns = customOnChange.value?.[fieldname];
   if (fieldDependentFns) {
     fieldDependentFns.forEach((fn: Function) => {
