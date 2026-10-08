@@ -103,7 +103,7 @@ const coreFields = computed(() => {
   const _coreFields = [
     { group: true, fields: [getField("agent_group")] },
     { group: true, fields: [getField("complaint_category")] },
-    { group: true, fields: [getField("ticket_type"), getField("priority")] },
+    { group: true, fields: [getField("priority")] },
     { group: false, fields: [getField("customer")] },
   ];
 
