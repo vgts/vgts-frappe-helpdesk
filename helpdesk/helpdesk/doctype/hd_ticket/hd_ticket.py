@@ -223,11 +223,8 @@ class HDTicket(Document):
         search.index_doc(self)
 
     def set_ticket_type(self):
-        if self.ticket_type:
-            return
-        settings = frappe.get_doc("HD Settings")
-        ticket_type = settings.default_ticket_type or DEFAULT_TICKET_TYPE
-        self.ticket_type = ticket_type
+        # ticket_type (Sub Complaint) is optional; skip auto-set
+        pass
 
     def set_raised_by(self):
         self.raised_by = self.raised_by or frappe.session.user
